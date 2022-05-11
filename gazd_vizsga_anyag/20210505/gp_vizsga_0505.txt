@@ -1,0 +1,80 @@
+Vizsga GP modellek 2021. május 05. 09 óra.
+
+Tisztelt Hallgató!
+
+Ha ezt olvassa, akkor remélem sikeresen letöltötte a feladatsort.
+Figyelmesen olvassa el a feladatokat és csak arra válaszoljon amire kell.
+Kérem, hogy szövegesen indokolja a válaszait, mert néhány program és ábra nem elegendõ.
+
+Az R felületén futassa le a következõ R kódot, amelybe be kell helyettesítenie
+a saját NEPTUN kódját az xyz63v helyére (kisbetûket és számjegyeket használjon)!!!
+
+x="xyz63v";#neptun kód
+z=charToRaw(iconv(x, "latin1", "UTF-8"))
+for (i in 1:6) v=paste("0x",z,sep="")
+e=strtoi(v)
+ax=e[1];ay=e[2];az=e[3];av=e[4];ss=sum(strtoi(v))+24
+cat("ax=",ax,"\n")
+cat("ay=",ay,"\n")
+cat("az=",az,"\n")
+cat("av=",av,"\n")
+cat("ss=",ss,"\n")
+ar=c( "FB","AAPL","AMZN","GOOG","NFLX","TSLA")
+ai=ss-6*floor(ss/6)
+ev=2019-(ss-10*floor(ss/10))
+cat("ev=",ev,"\n")
+cat("reszveny=",ar[ai+1],"\n")
+
+
+A kapott "ax, ay, az, av, ss, ev, reszveny" értékeket jegyezze meg. Sõt a megoldás fájlba ezeket is adja meg!
+
+1. feladat: 	Készítse el a következõ 900 elemû kétdimenziós mintarealizációt:
+		A generálás elõtt állítsa be a set.seed(ss) értéket.
+		set.seed(ss)
+			nx=700
+			v=matrix(c(ax,abs(ax-az),abs(ax-az),az),2)
+			w=chol(v)
+			z1=rnorm(nx)
+			z2=rnorm(nx)
+			zm=matrix(c(z1,z2),ncol=2)
+		zn=zm%*%w
+		
+		Készítsen az elõzõ kétdimenziós zn mintarealizációról
+		statisztikai elemzést, azaz becsülje meg a paramétereket, 
+		ferdeséget, lapultságot és adja meg hogy milyen eloszlás lehet(vizsgálat szükséges)! (1 pont)
+		
+2. feladat:	Az 1. feladatban adott adatokra vizsgálja meg a peremek függetlenségét! (1 pont)
+		
+3. feladat:	Az 1. feladatban adott adatokra készítsen többdimenziós (háromdimenzióst is) ábrázolást szintvonalakkal és perspektívikusan is
+		(feliratozással, a kétdimenziós eloszlás jól látható legyen)! (1 pont)
+		
+4. feladat:	Generáljon geometriai Brown folyamatot ( várható érték: mu= ax, szórás: sigma=(ax+az)/(ax+ay+az) értékkel, az idõintervallum 500 egység)!
+		A generálás elõtt állítsa be a set.seed(ss+17) értéket. 
+		Ábrázolja a folyamatot és vizsgálja meg a statisztikai jellemzõket! (1 pont)
+		
+5-6. feladat:   Töltse le az R kód futtatásával kapott részvény	adatait a
+		https://finance.yahoo.com/quote/reszveny/history?p=reszveny
+		(vigyázat a "reszveny" kétszer szerepel.)
+		honlapról az ev változó értékének megfelelõen (január 01-tõl december 31-ig)!
+		Vizsgálja meg milyen eloszlású a napi záró árak("Close*") megváltozásának logaritmusa 
+		(javasolt a logreturn, azaz ln(x_(n+1)/x_n) értékek vizsgálata)
+		(minimum khí négyzet próba, ez azt jelenti, hogy meg kell adni az eloszlást paraméterekkel)! 
+		Grafikus ábrázolás, pontbecslések és intervallumbecslések!!! (2pont)
+		
+7. feladat:	A következõ évfolyam (részvény adatok) alapján ellenõrizze, hogy mgfelelõ becslést adtunk-e az elõrejelzéshez! (1 pont)	
+		
+		
+BEKÜLDENDÕ: Az R kódok (forrás) egyszerû szöveg formátumban(txt), a futtatáskor keletkezett
+		ax, ay, az, av, ss, ev, reszveny értékek, a legyártott  mintarealizációk,
+		az adott részvény adatai, a záró árak külön fájlban. Lényeges legyen illeszkedésvizsgálat!!!
+		
+		Továbbá a megoldások (futtatások eredményei, a statisztikai elemzések és a következtetések, 
+		a függetlenségre és az eloszlásokra vonatkozó következtetések),
+		ábrákkal együtt egy pdf (Portable Document Format) fájlban. 
+		
+		Az egész válasz legyen egy ZIP tömörített fájl, amelynek a neve: a hallgató család neve, 
+		utána aláhúzás, utána neptun kód. Pl. Kovacs_xyz35j.zip
+		Beküldési e-mail cím: matfs@uni-miskolc.hu
+		
+Beérkezési határidõ: 2021. május 05. 11:15		
+				

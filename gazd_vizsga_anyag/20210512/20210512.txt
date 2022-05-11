@@ -1,0 +1,179 @@
+> x="h0sre6";#neptun kód
+> z=charToRaw(iconv(x, "latin1", "UTF-8"))
+> for (i in 1:6) v=paste("0x",z,sep="")
+> e=strtoi(v)
+> ax=e[1];ay=e[2];az=e[3];av=e[4];ss=sum(strtoi(v))+24
+> cat("ax=",ax,"\n")
+ax= 104 
+> cat("ay=",ay,"\n")
+ay= 48 
+> cat("az=",az,"\n")
+az= 115 
+> cat("av=",av,"\n")
+av= 114 
+> cat("ss=",ss,"\n")
+ss= 560 
+> ar=c( "FB","AAPL","AMZN","GOOG","NFLX","TSLA")
+> ai=ss-6*floor(ss/6)
+> ev=2019-(ss-10*floor(ss/10))
+> cat("ev=",ev,"\n")
+ev= 2019 
+> cat("reszveny=",ar[ai+1],"\n")
+reszveny= AMZN 
+
+
+> ### 1. feladat
+
+
+> set.seed(ss)
+> nx=900
+> v=matrix(c(ax,abs(ax-az),abs(ax-az),az),2)
+> w=chol(v)
+> z1=rnorm(nx)
+> z2=rnorm(nx)
+> zm=matrix(c(z1,z2),ncol=2)
+> zn=zm%*%w
+> library(moments)
+> # ferdeség
+> skewness(zn)
+[1] -0.03601082  0.04057680
+> # lapultság
+> kurtosis(zn)
+[1] 3.233876 2.752974
+> summary(zn)
+       V1                  V2          
+ Min.   :-35.63620   Min.   :-34.0004  
+ 1st Qu.: -6.62930   1st Qu.: -7.5760  
+ Median :  0.03136   Median : -0.7066  
+ Mean   : -0.10135   Mean   : -0.4807  
+ 3rd Qu.:  6.38484   3rd Qu.:  6.9539  
+ Max.   : 31.35103   Max.   : 31.5442  
+> plot(zn, main="Ketdimenzios realizacio")
+
+
+> ### 2. feladat
+
+
+> library(MASS)
+> x<-zn[,1]
+> y<-zn[,2]
+> tbl=table(x,y)
+> chisq.test(tbl)
+
+        Pearson's Chi-squared test
+
+data:  tbl
+X-squared = 809100, df = 808201, p-value = 0.2397
+
+Warning message:
+In chisq.test(tbl) : Chi-squared approximation may be incorrect
+
+
+> ### 3. feladat
+
+
+> persp(zn, col="orange", shade = 0.4)
+> contour(zn)
+
+
+> ### 4. feladat
+
+
+> set.seed(ss+17)
+> nsim <- 50
+> t <- 500
+> mu <- ax
+> sigma <- (ax+ay)/(ax+ay+az)
+> S0 <- 500
+> gbm_vec <- function(nsim = 100, t = 25, mu = 0, sigma = 0.1, S0 = 100, dt = 1./365) {
++   epsilon <- matrix(rnorm(t*nsim), ncol = nsim, nrow = t)  
++   gbm <- exp((mu - sigma * sigma / 2) * dt + sigma * epsilon * sqrt(dt))
++   gbm <- apply(rbind(rep(S0, nsim), gbm), 2, cumprod)
++   return(gbm)
++ }
+> gbm <- gbm_vec(nsim, t, mu, sigma, S0)
+> summary(gbm)
+       V1                  V2                  V3                  V4                  V5                  V6                  V7           
+ Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02  
+ 1st Qu.:1.146e+18   1st Qu.:1.087e+18   1st Qu.:1.867e+18   1st Qu.:1.728e+18   1st Qu.:2.292e+18   1st Qu.:1.047e+18   1st Qu.:1.692e+18  
+ Median :2.247e+33   Median :2.489e+33   Median :6.280e+33   Median :5.500e+33   Median :4.556e+33   Median :1.923e+33   Median :6.057e+33  
+ Mean   :1.505e+62   Mean   :9.967e+61   Mean   :2.147e+62   Mean   :2.877e+62   Mean   :4.401e+62   Mean   :1.381e+62   Mean   :3.382e+62  
+ 3rd Qu.:7.591e+48   3rd Qu.:5.765e+48   3rd Qu.:1.669e+49   3rd Qu.:1.299e+49   3rd Qu.:2.160e+49   3rd Qu.:4.865e+48   3rd Qu.:1.543e+49  
+ Max.   :1.783e+64   Max.   :1.235e+64   Max.   :2.543e+64   Max.   :3.685e+64   Max.   :5.379e+64   Max.   :1.704e+64   Max.   :4.175e+64  
+       V8                  V9                 V10                 V11                 V12                 V13                 V14           
+ Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02  
+ 1st Qu.:1.847e+18   1st Qu.:6.932e+17   1st Qu.:1.324e+18   1st Qu.:2.005e+18   1st Qu.:1.424e+18   1st Qu.:1.363e+18   1st Qu.:1.804e+18  
+ Median :3.509e+33   Median :1.642e+33   Median :5.584e+33   Median :6.904e+33   Median :3.817e+33   Median :4.082e+33   Median :6.372e+33  
+ Mean   :2.267e+62   Mean   :8.910e+61   Mean   :1.933e+62   Mean   :5.626e+62   Mean   :4.147e+62   Mean   :2.499e+62   Mean   :6.893e+62  
+ 3rd Qu.:8.770e+48   3rd Qu.:4.587e+48   3rd Qu.:1.105e+49   3rd Qu.:2.582e+49   3rd Qu.:2.103e+49   3rd Qu.:1.373e+49   3rd Qu.:2.775e+49  
+ Max.   :2.718e+64   Max.   :1.093e+64   Max.   :2.381e+64   Max.   :7.026e+64   Max.   :5.242e+64   Max.   :3.126e+64   Max.   :8.891e+64  
+      V15                 V16                 V17                 V18                 V19                 V20                 V21           
+ Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02  
+ 1st Qu.:1.058e+18   1st Qu.:1.280e+18   1st Qu.:1.315e+18   1st Qu.:1.263e+18   1st Qu.:9.900e+17   1st Qu.:9.586e+17   1st Qu.:1.080e+18  
+ Median :1.508e+33   Median :7.403e+33   Median :2.413e+33   Median :3.371e+33   Median :2.415e+33   Median :2.801e+33   Median :1.324e+33  
+ Mean   :5.551e+61   Mean   :4.847e+62   Mean   :1.654e+62   Mean   :9.753e+61   Mean   :7.003e+61   Mean   :2.971e+62   Mean   :7.429e+61  
+ 3rd Qu.:2.209e+48   3rd Qu.:1.756e+49   3rd Qu.:8.168e+48   3rd Qu.:7.926e+48   3rd Qu.:5.350e+48   3rd Qu.:7.372e+48   3rd Qu.:3.272e+48  
+ Max.   :6.720e+63   Max.   :6.435e+64   Max.   :1.983e+64   Max.   :1.155e+64   Max.   :8.666e+63   Max.   :3.752e+64   Max.   :9.325e+63  
+      V22                 V23                 V24                 V25                 V26                 V27                 V28           
+ Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02  
+ 1st Qu.:1.935e+18   1st Qu.:1.184e+18   1st Qu.:1.416e+18   1st Qu.:8.388e+17   1st Qu.:1.208e+18   1st Qu.:7.564e+17   1st Qu.:1.199e+18  
+ Median :5.134e+33   Median :5.924e+33   Median :5.036e+33   Median :5.413e+33   Median :1.920e+33   Median :2.050e+33   Median :2.237e+33  
+ Mean   :6.057e+62   Mean   :4.405e+62   Mean   :1.590e+62   Mean   :5.379e+62   Mean   :9.954e+61   Mean   :1.599e+62   Mean   :1.396e+62  
+ 3rd Qu.:2.205e+49   3rd Qu.:1.170e+49   3rd Qu.:6.136e+48   3rd Qu.:2.052e+49   3rd Qu.:6.794e+48   3rd Qu.:7.226e+48   3rd Qu.:4.999e+48  
+ Max.   :7.713e+64   Max.   :5.680e+64   Max.   :1.926e+64   Max.   :6.745e+64   Max.   :1.242e+64   Max.   :1.943e+64   Max.   :1.828e+64  
+      V29                 V30                 V31                 V32                 V33                 V34                 V35           
+ Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02  
+ 1st Qu.:1.538e+18   1st Qu.:1.284e+18   1st Qu.:1.629e+18   1st Qu.:2.868e+18   1st Qu.:9.952e+17   1st Qu.:1.796e+18   1st Qu.:2.866e+18  
+ Median :2.237e+33   Median :3.860e+33   Median :2.649e+33   Median :6.727e+33   Median :2.383e+33   Median :4.897e+33   Median :7.188e+33  
+ Mean   :1.165e+62   Mean   :3.537e+62   Mean   :2.144e+62   Mean   :3.295e+62   Mean   :1.065e+62   Mean   :8.356e+62   Mean   :5.897e+62  
+ 3rd Qu.:5.537e+48   3rd Qu.:1.027e+49   3rd Qu.:8.855e+48   3rd Qu.:1.844e+49   3rd Qu.:7.574e+48   3rd Qu.:1.619e+49   3rd Qu.:1.753e+49  
+ Max.   :1.466e+64   Max.   :4.455e+64   Max.   :2.677e+64   Max.   :4.069e+64   Max.   :1.347e+64   Max.   :1.070e+65   Max.   :7.588e+64  
+      V36                 V37                 V38                 V39                 V40                 V41                 V42           
+ Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02  
+ 1st Qu.:1.025e+18   1st Qu.:1.513e+18   1st Qu.:1.081e+18   1st Qu.:2.394e+18   1st Qu.:1.944e+18   1st Qu.:2.269e+18   1st Qu.:1.553e+18  
+ Median :5.012e+33   Median :6.468e+33   Median :3.542e+33   Median :9.277e+33   Median :4.274e+33   Median :4.912e+33   Median :5.854e+33  
+ Mean   :5.254e+62   Mean   :4.434e+62   Mean   :2.962e+62   Mean   :1.058e+63   Mean   :1.713e+62   Mean   :2.222e+62   Mean   :4.921e+62  
+ 3rd Qu.:1.909e+49   3rd Qu.:1.631e+49   3rd Qu.:8.462e+48   3rd Qu.:2.865e+49   3rd Qu.:1.339e+49   3rd Qu.:1.116e+49   3rd Qu.:2.469e+49  
+ Max.   :6.738e+64   Max.   :5.658e+64   Max.   :3.722e+64   Max.   :1.293e+65   Max.   :2.089e+64   Max.   :2.799e+64   Max.   :5.803e+64  
+      V43                 V44                 V45                 V46                 V47                 V48                 V49           
+ Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02   Min.   :5.000e+02  
+ 1st Qu.:1.343e+18   1st Qu.:1.013e+18   1st Qu.:2.102e+18   1st Qu.:9.131e+17   1st Qu.:1.418e+18   1st Qu.:1.590e+18   1st Qu.:1.813e+18  
+ Median :6.519e+33   Median :2.453e+33   Median :4.904e+33   Median :3.044e+33   Median :3.246e+33   Median :3.132e+33   Median :4.676e+33  
+ Mean   :5.782e+62   Mean   :1.072e+62   Mean   :1.672e+62   Mean   :2.473e+62   Mean   :2.030e+62   Mean   :2.444e+62   Mean   :2.961e+62  
+ 3rd Qu.:2.579e+49   3rd Qu.:6.331e+48   3rd Qu.:8.716e+48   3rd Qu.:7.825e+48   3rd Qu.:7.806e+48   3rd Qu.:1.001e+49   3rd Qu.:1.740e+49  
+ Max.   :6.710e+64   Max.   :1.384e+64   Max.   :2.071e+64   Max.   :3.212e+64   Max.   :2.477e+64   Max.   :2.980e+64   Max.   :3.568e+64  
+      V50           
+ Min.   :5.000e+02  
+ 1st Qu.:1.246e+18  
+ Median :2.570e+33  
+ Mean   :1.776e+62  
+ 3rd Qu.:9.320e+48  
+ Max.   :2.204e+64  
+> plot(gbm)
+
+
+> ### 5-6. feladat
+
+> # ev= 2019
+> # reszveny= AMZN 
+
+
+> reszveny=read.csv("D:/AMZN.csv")
+> x = reszveny$Close
+> 
+> logreturn = c()
+> for(n in 1:length(x)-1){
++   logreturn[n] = abs(log(x[n+1]/x[n]))
++ }
+> chisq.test(logreturn)
+
+        Chi-squared test for given probabilities
+
+data:  logreturn
+X-squared = 2.2491, df = 249, p-value = 1
+
+Warning message:
+In chisq.test(logreturn) : Chi-squared approximation may be incorrect
+> plot(logreturn, main="logreturn")
+> hist(logreturn)
+> 

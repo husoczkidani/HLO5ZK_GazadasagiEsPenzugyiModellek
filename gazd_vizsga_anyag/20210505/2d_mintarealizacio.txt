@@ -1,0 +1,14 @@
+
+set.seed(ss)
+			nx=900
+			v=matrix(c(ax,abs(ax-az),abs(ax-az),az),2)
+			w=chol(v)
+			z1=rnorm(nx)
+			z2=rnorm(nx)
+			zm=matrix(c(z1,z2),ncol=2)
+		zn=zm%*%w
+
+library(moments)
+skewness(zn)
+kurtosis(zn)
+summary(zn)

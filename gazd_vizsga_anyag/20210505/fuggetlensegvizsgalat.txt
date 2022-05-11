@@ -1,0 +1,6 @@
+#2 feladat
+library(MASS)
+x<-zn[,1]
+y<-zn[,2]
+tbl=table(x,y)
+chisq.test(tbl)

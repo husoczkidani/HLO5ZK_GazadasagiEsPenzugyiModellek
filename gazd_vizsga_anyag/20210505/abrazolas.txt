@@ -1,0 +1,3 @@
+#3 feladat
+persp(zn, col="orange", shade = 0.4)
+contour(zn)

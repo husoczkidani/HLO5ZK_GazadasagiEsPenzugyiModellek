@@ -1,0 +1,15 @@
+#5-6 feladat
+# ev= 2019
+# reszveny= AMZN 
+
+reszveny=read.csv("G:/AMZN.csv")
+x = reszveny$Close
+ 
+logreturn = c()
+for(n in 1:length(x)-1){
+logreturn[n] = abs(log(x[n+1]/x[n]))
+}
+chisq.test(logreturn)
+
+plot(logreturn, main="logreturn")
+hist(logreturn)

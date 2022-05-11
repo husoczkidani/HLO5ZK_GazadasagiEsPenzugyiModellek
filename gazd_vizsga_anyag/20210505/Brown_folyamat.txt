@@ -1,0 +1,17 @@
+#4 feladat
+set.seed(ss+17)
+nsim <- 50
+t <- 500
+mu <- ax
+sigma <- (ax+ay)/(ax+ay+az)
+S0 <- 500
+gbm_vec <- function(nsim = 100, t = 25, mu = 0, sigma = 0.1, S0 = 100, dt = 1./365) {
+epsilon <- matrix(rnorm(t*nsim), ncol = nsim, nrow = t)  
+gbm <- exp((mu - sigma * sigma / 2) * dt + sigma * epsilon * sqrt(dt))
+gbm <- apply(rbind(rep(S0, nsim), gbm), 2, cumprod)
+return(gbm)
+}
+gbm <- gbm_vec(nsim, t, mu, sigma, S0)
+summary(gbm)
+
+plot(gbm)
